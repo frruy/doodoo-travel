@@ -44,6 +44,17 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(projects.shared)
+
+            // decompose
+            implementation(libs.decompose)
+            implementation(libs.decompose.extensions.compose)
+
+            implementation(libs.koin.core)
+            implementation(libs.essenty.lifecycle.coroutines)
+            implementation(libs.mvikotlin)
+            implementation(libs.mvikotlin.extensions.coroutines)
+            implementation(libs.mvikotlin.logging)
+            implementation(libs.mvikotlin.timetravel)
         }
     }
 }
