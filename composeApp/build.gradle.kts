@@ -7,6 +7,8 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlin.serialization)
+
 }
 
 kotlin {
@@ -49,9 +51,10 @@ kotlin {
             implementation(libs.decompose)
             implementation(libs.decompose.extensions.compose)
 
-            implementation(libs.koin.core)
+            implementation(libs.kodein.di)
             implementation(libs.essenty.lifecycle.coroutines)
             implementation(libs.mvikotlin)
+            implementation(libs.mvikotlin.main)
             implementation(libs.mvikotlin.extensions.coroutines)
             implementation(libs.mvikotlin.logging)
             implementation(libs.mvikotlin.timetravel)

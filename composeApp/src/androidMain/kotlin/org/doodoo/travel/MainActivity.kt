@@ -3,21 +3,20 @@ package org.doodoo.travel
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
+import com.arkivanov.decompose.defaultComponentContext
+import org.doodoo.travel.presentation.root.RootComponent
+import org.kodein.di.instance
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val rootComponentFactory: RootComponent.Factory by kodein.instance()
+        val rootComponent = rootComponentFactory(defaultComponentContext())
+
         setContent {
-            App()
+            App(rootComponent = rootComponent)
         }
     }
-}
-
-@Preview
-@Composable
-fun AppAndroidPreview() {
-    App()
 }
