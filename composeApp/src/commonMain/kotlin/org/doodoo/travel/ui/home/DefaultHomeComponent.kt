@@ -31,7 +31,7 @@ internal class DefaultHomeComponent(
     private fun HomeStore.State.toHomeState(): HomeState =
         when (this) {
             is HomeStore.State.Content -> HomeState.Content(
-                discoverData = discoverData,
+                travelGuild = travelGuild,
                 isLoading = isLoading,
                 error = error
             )

@@ -1,6 +1,6 @@
 package org.doodoo.travel.ui.root
 
-import HomeContent
+import HomeScreen
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
@@ -44,9 +44,9 @@ fun RootContent(component: RootComponent) {
         Box(modifier = Modifier.padding(padding)) {
             Children(stack = childStack) { child ->
                 when (val instance = child.instance) {
-                    is RootComponent.Child.Home -> HomeContent(instance.component)
-                    is RootComponent.Child.Search -> HomeContent(instance.component)
-                    is RootComponent.Child.Profile -> HomeContent(instance.component)
+                    is RootComponent.Child.Home -> HomeScreen(instance.component)
+                    is RootComponent.Child.Search -> HomeScreen(instance.component)
+                    is RootComponent.Child.Profile -> HomeScreen(instance.component)
                 }
             }
         }

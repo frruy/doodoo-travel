@@ -5,13 +5,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import org.doodoo.travel.core.model.DiscoverData
+import org.doodoo.travel.core.model.TravelGuide
 import org.doodoo.travel.ui.home.HomeComponent
 import org.doodoo.travel.ui.home.HomeLabel
 import org.doodoo.travel.ui.home.HomeState
 
 @Composable
-fun HomeContent(component: HomeComponent) {
+fun HomeScreen(component: HomeComponent) {
     val state by component.state.subscribeAsState()
 
     LaunchedEffect(component) {
@@ -39,7 +39,7 @@ fun HomeContent(component: HomeComponent) {
 
         when (val currentState = state) {
             is HomeState.Content -> ContentView(
-                discoverData = currentState.discoverData,
+                travelGuild = currentState.travelGuild,
                 isLoading = currentState.isLoading,
                 onRefresh = component::refresh,
                 onUpdateData = component::updateHomeData
@@ -55,16 +55,16 @@ fun HomeContent(component: HomeComponent) {
 
 @Composable
 private fun ContentView(
-    discoverData: DiscoverData,
+    travelGuild: TravelGuide,
     isLoading: Boolean,
     onRefresh: () -> Unit,
     onUpdateData: (String) -> Unit
 ) {
-    var inputText by remember { mutableStateOf(discoverData.someData) }
+    var inputText by remember { mutableStateOf(travelGuild.destination) }
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
-            text = "Current Data: ${discoverData.someData}",
+            text = "Current Data: ${travelGuild.destination}",
             style = MaterialTheme.typography.h6,
             modifier = Modifier.padding(bottom = 16.dp)
         )

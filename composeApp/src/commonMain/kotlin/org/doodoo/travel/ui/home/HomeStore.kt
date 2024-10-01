@@ -6,8 +6,8 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import kotlinx.coroutines.launch
-import org.doodoo.travel.data.repository.DiscoverRepository
-import org.doodoo.travel.core.model.DiscoverData
+import org.doodoo.travel.core.model.TravelGuide
+import org.doodoo.travel.data.repository.TravelGuideRepository
 
 internal interface HomeStore : Store<HomeStore.Intent, HomeStore.State, HomeStore.Label> {
     sealed interface State {
@@ -15,7 +15,7 @@ internal interface HomeStore : Store<HomeStore.Intent, HomeStore.State, HomeStor
         val error: String?
 
         data class Content(
-            val discoverData: DiscoverData,
+            val travelGuild: TravelGuide,
             override val isLoading: Boolean = false,
             override val error: String? = null
         ) : State
@@ -38,31 +38,31 @@ internal interface HomeStore : Store<HomeStore.Intent, HomeStore.State, HomeStor
 
 internal class HomeStoreFactory(
     private val storeFactory: StoreFactory,
-    private val discoverRepository: DiscoverRepository,
+    private val travelGuideRepository: TravelGuideRepository,
 ) {
     fun create(): HomeStore =
         object : HomeStore, Store<HomeStore.Intent, HomeStore.State, HomeStore.Label> by storeFactory.create(
             name = "HomeStore",
-            initialState = HomeStore.State.Content(DiscoverData(""), isLoading = true),
-            bootstrapper = BootstrapperImpl(discoverRepository),
-            executorFactory = { ExecutorImpl(discoverRepository) },
+            initialState = HomeStore.State.Content(TravelGuide.default(), isLoading = true),
+            bootstrapper = BootstrapperImpl(travelGuideRepository),
+            executorFactory = { ExecutorImpl(travelGuideRepository) },
             reducer = ReducerImpl
         ) {}
 
     private sealed interface Action {
         data object LoadHomeData : Action
-        data class HomeDataLoaded(val discoverData: DiscoverData) : Action
+        data class HomeDataLoaded(val travelGuild: TravelGuide) : Action
         data class HomeDataLoadFailed(val error: String) : Action
     }
 
     private sealed interface Msg {
         data object Loading : Msg
-        data class HomeDataUpdated(val discoverData: DiscoverData) : Msg
+        data class HomeDataUpdated(val travelGuild: TravelGuide) : Msg
         data class ErrorOccurred(val error: String) : Msg
     }
 
     private class BootstrapperImpl(
-        private val discoverRepository: DiscoverRepository
+        private val travelGuideRepository: TravelGuideRepository
     ) : CoroutineBootstrapper<Action>() {
         override fun invoke() {
             dispatch(Action.LoadHomeData)
@@ -70,7 +70,7 @@ internal class HomeStoreFactory(
     }
 
     private class ExecutorImpl(
-        private val discoverRepository: DiscoverRepository
+        private val travelGuideRepository: TravelGuideRepository
     ) : CoroutineExecutor<HomeStore.Intent, Action, HomeStore.State, Msg, HomeStore.Label>() {
         override fun executeIntent(intent: HomeStore.Intent) {
             when (intent) {
@@ -82,7 +82,7 @@ internal class HomeStoreFactory(
         override fun executeAction(action: Action) {
             when (action) {
                 is Action.LoadHomeData -> loadHomeData()
-                is Action.HomeDataLoaded -> dispatch(Msg.HomeDataUpdated(action.discoverData))
+                is Action.HomeDataLoaded -> dispatch(Msg.HomeDataUpdated(action.travelGuild))
                 is Action.HomeDataLoadFailed -> dispatch(Msg.ErrorOccurred(action.error))
             }
         }
@@ -91,7 +91,7 @@ internal class HomeStoreFactory(
             scope.launch {
                 dispatch(Msg.Loading)
                 try {
-                    val homeData = discoverRepository.getData("Default")
+                    val homeData = travelGuideRepository.getData("Default")
                     dispatch(Msg.HomeDataUpdated(homeData))
                 } catch (e: Exception) {
                     val errorMsg = e.message ?: "Failed to load home data"
@@ -105,7 +105,7 @@ internal class HomeStoreFactory(
             scope.launch {
                 dispatch(Msg.Loading)
                 try {
-                    val updatedData = discoverRepository.getData(newData)
+                    val updatedData = travelGuideRepository.getData(newData)
                     dispatch(Msg.HomeDataUpdated(updatedData))
                 } catch (e: Exception) {
                     val errorMsg = e.message ?: "Failed to update home data"
@@ -121,13 +121,13 @@ internal class HomeStoreFactory(
             when (this) {
                 is HomeStore.State.Content -> when (msg) {
                     is Msg.Loading -> copy(isLoading = true, error = null)
-                    is Msg.HomeDataUpdated -> copy(discoverData = msg.discoverData, isLoading = false, error = null)
+                    is Msg.HomeDataUpdated -> copy(travelGuild = msg.travelGuild, isLoading = false, error = null)
                     is Msg.ErrorOccurred -> HomeStore.State.Error(msg.error, isLoading = false)
                 }
 
                 is HomeStore.State.Error -> when (msg) {
-                    is Msg.Loading -> HomeStore.State.Content(DiscoverData(""), isLoading = true)
-                    is Msg.HomeDataUpdated -> HomeStore.State.Content(msg.discoverData, isLoading = false)
+                    is Msg.Loading -> HomeStore.State.Content(TravelGuide.default(), isLoading = true)
+                    is Msg.HomeDataUpdated -> HomeStore.State.Content(msg.travelGuild, isLoading = false)
                     is Msg.ErrorOccurred -> copy(error = msg.error, isLoading = false)
                 }
             }
