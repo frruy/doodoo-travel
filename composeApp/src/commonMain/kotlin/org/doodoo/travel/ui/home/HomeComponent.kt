@@ -1,8 +1,9 @@
-package org.doodoo.travel.presentation.home
+package org.doodoo.travel.ui.home
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.Value
 import kotlinx.coroutines.flow.Flow
+import org.doodoo.travel.core.model.DiscoverData
 
 interface HomeComponent {
     val state: Value<HomeState>
@@ -24,7 +25,7 @@ sealed interface HomeState {
     val error: String?
 
     data class Content(
-        val homeData: HomeData,
+        val discoverData: DiscoverData,
         override val isLoading: Boolean,
         override val error: String?
     ) : HomeState

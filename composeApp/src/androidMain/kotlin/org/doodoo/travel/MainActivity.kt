@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.arkivanov.decompose.defaultComponentContext
-import org.doodoo.travel.presentation.root.RootComponent
+import org.doodoo.travel.ui.root.RootComponent
 import org.kodein.di.instance
 
 class MainActivity : ComponentActivity() {

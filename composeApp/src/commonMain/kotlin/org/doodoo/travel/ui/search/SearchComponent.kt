@@ -1,10 +1,9 @@
-package org.doodoo.travel.presentation.search
+package org.doodoo.travel.ui.search
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow
 
 class SearchComponent(

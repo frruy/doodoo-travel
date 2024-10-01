@@ -1,4 +1,4 @@
-package org.doodoo.travel.presentation.root
+package org.doodoo.travel.ui.root
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
@@ -6,8 +6,8 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.Value
-import org.doodoo.travel.presentation.home.HomeComponent
-import org.doodoo.travel.presentation.root.RootComponent.Config
+import org.doodoo.travel.ui.home.HomeComponent
+import org.doodoo.travel.ui.root.RootComponent.Config
 
 internal class DefaultRootComponent(
     componentContext: ComponentContext,

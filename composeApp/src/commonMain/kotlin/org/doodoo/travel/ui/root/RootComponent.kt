@@ -1,10 +1,10 @@
-package org.doodoo.travel.presentation.root
+package org.doodoo.travel.ui.root
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import kotlinx.serialization.Serializable
-import org.doodoo.travel.presentation.home.HomeComponent
+import org.doodoo.travel.ui.home.HomeComponent
 
 interface RootComponent {
     val childStack: Value<ChildStack<Config, Child>>

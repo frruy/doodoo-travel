@@ -3,18 +3,23 @@ package org.doodoo.travel
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.logging.store.LoggingStoreFactory
 import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStoreFactory
-import org.doodoo.travel.presentation.home.*
-import org.doodoo.travel.presentation.home.DefaultHomeComponent
-import org.doodoo.travel.presentation.home.HomeStoreFactory
-import org.doodoo.travel.presentation.root.DefaultRootComponent
-import org.doodoo.travel.presentation.root.RootComponent
-import org.kodein.di.DI
-import org.kodein.di.bindSingleton
-import org.kodein.di.instance
+import io.ktor.client.*
+import io.ktor.client.engine.cio.*
+import org.doodoo.travel.data.repository.DiscoverRepository
+import org.doodoo.travel.data.repository.DiscoverRepositoryImpl
+import org.doodoo.travel.ui.home.DefaultHomeComponent
+import org.doodoo.travel.ui.home.HomeComponent
+import org.doodoo.travel.ui.home.HomeStoreFactory
+import org.doodoo.travel.ui.root.DefaultRootComponent
+import org.doodoo.travel.ui.root.RootComponent
+import org.kodein.di.*
 
 val kodein = DI {
+
+    bind<HttpClient>() with singleton { HttpClient(CIO) }
+
     // repository
-    bindSingleton<HomeRepository> { DefaultHomeRepository() }
+    bindSingleton<DiscoverRepository> { DiscoverRepositoryImpl(instance()) }
 
     // store
     bindSingleton<StoreFactory> { LoggingStoreFactory(TimeTravelStoreFactory())}
@@ -27,7 +32,7 @@ val kodein = DI {
     bindSingleton {
         HomeStoreFactory(
             storeFactory = instance(),
-            homeRepository = instance()
+            discoverRepository = instance()
         )
     }
 

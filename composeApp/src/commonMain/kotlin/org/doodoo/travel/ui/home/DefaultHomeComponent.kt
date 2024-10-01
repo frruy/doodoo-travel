@@ -1,10 +1,9 @@
-package org.doodoo.travel.presentation.home
+package org.doodoo.travel.ui.home
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.operator.map
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
-import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -32,7 +31,7 @@ internal class DefaultHomeComponent(
     private fun HomeStore.State.toHomeState(): HomeState =
         when (this) {
             is HomeStore.State.Content -> HomeState.Content(
-                homeData = homeData,
+                discoverData = discoverData,
                 isLoading = isLoading,
                 error = error
             )

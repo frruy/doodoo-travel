@@ -1,4 +1,4 @@
-package org.doodoo.travel.presentation.root
+package org.doodoo.travel.ui.root
 
 import HomeContent
 import androidx.compose.foundation.layout.Box

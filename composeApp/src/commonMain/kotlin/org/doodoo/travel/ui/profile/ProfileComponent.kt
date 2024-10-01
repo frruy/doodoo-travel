@@ -1,4 +1,4 @@
-package org.doodoo.travel.presentation.profile
+package org.doodoo.travel.ui.profile
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.store.Store

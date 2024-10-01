@@ -58,6 +58,11 @@ kotlin {
             implementation(libs.mvikotlin.extensions.coroutines)
             implementation(libs.mvikotlin.logging)
             implementation(libs.mvikotlin.timetravel)
+
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.ktor.client.cio)
         }
     }
 }

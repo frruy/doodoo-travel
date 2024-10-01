@@ -5,10 +5,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import org.doodoo.travel.presentation.home.HomeComponent
-import org.doodoo.travel.presentation.home.HomeData
-import org.doodoo.travel.presentation.home.HomeLabel
-import org.doodoo.travel.presentation.home.HomeState
+import org.doodoo.travel.core.model.DiscoverData
+import org.doodoo.travel.ui.home.HomeComponent
+import org.doodoo.travel.ui.home.HomeLabel
+import org.doodoo.travel.ui.home.HomeState
 
 @Composable
 fun HomeContent(component: HomeComponent) {
@@ -39,7 +39,7 @@ fun HomeContent(component: HomeComponent) {
 
         when (val currentState = state) {
             is HomeState.Content -> ContentView(
-                homeData = currentState.homeData,
+                discoverData = currentState.discoverData,
                 isLoading = currentState.isLoading,
                 onRefresh = component::refresh,
                 onUpdateData = component::updateHomeData
@@ -55,16 +55,16 @@ fun HomeContent(component: HomeComponent) {
 
 @Composable
 private fun ContentView(
-    homeData: HomeData,
+    discoverData: DiscoverData,
     isLoading: Boolean,
     onRefresh: () -> Unit,
     onUpdateData: (String) -> Unit
 ) {
-    var inputText by remember { mutableStateOf(homeData.someData) }
+    var inputText by remember { mutableStateOf(discoverData.someData) }
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
-            text = "Current Data: ${homeData.someData}",
+            text = "Current Data: ${discoverData.someData}",
             style = MaterialTheme.typography.h6,
             modifier = Modifier.padding(bottom = 16.dp)
         )
