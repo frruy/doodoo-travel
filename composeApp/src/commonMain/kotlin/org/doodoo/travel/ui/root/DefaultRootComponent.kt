@@ -6,12 +6,13 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.Value
-import org.doodoo.travel.ui.home.HomeComponent
+import com.arkivanov.mvikotlin.core.store.StoreFactory
+import org.doodoo.travel.ui.home.DefaultHomeComponent
 import org.doodoo.travel.ui.root.RootComponent.Config
 
 internal class DefaultRootComponent(
     componentContext: ComponentContext,
-    private val homeComponentFactory: HomeComponent.Factory,
+    private val storeFactory: StoreFactory,
 ) : RootComponent, ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Config>()
@@ -26,25 +27,34 @@ internal class DefaultRootComponent(
 
     private fun createChild(config: Config, componentContext: ComponentContext): RootComponent.Child =
         when (config) {
+//            is Config.Home -> RootComponent.Child.Home(
+//                homeComponentFactory(
+//                    componentContext = componentContext,
+//                    refresh = { navigation.bringToFront(Config.Home) },
+//                    updateHomeData = { newData -> "updateHomeData: home" }
+//                )
+//            )
+
             is Config.Home -> RootComponent.Child.Home(
-                homeComponentFactory(
+                DefaultHomeComponent(
                     componentContext = componentContext,
-                    refresh = { navigation.bringToFront(Config.Home) },
-                    updateHomeData = { newData -> "updateHomeData: home" }
+                    storeFactory = storeFactory
                 )
             )
 
-            is Config.Search -> RootComponent.Child.Search(homeComponentFactory(
-                componentContext = componentContext,
-                refresh = { navigation.bringToFront(Config.Home) },
-                updateHomeData = { newData -> "updateHomeData: search" }
-            ))
+            is Config.Search -> RootComponent.Child.Search(
+                DefaultHomeComponent(
+                    componentContext = componentContext,
+                    storeFactory = storeFactory
+                )
+            )
 
-            is Config.Profile -> RootComponent.Child.Profile(homeComponentFactory(
-                componentContext = componentContext,
-                refresh = { navigation.bringToFront(Config.Home) },
-                updateHomeData = { newData -> "updateHomeData: profile" }
-            ))
+            is Config.Profile -> RootComponent.Child.Profile(
+                DefaultHomeComponent(
+                    componentContext = componentContext,
+                    storeFactory = storeFactory
+                )
+            )
         }
 
     override fun onHomeTabClicked() {
@@ -57,18 +67,5 @@ internal class DefaultRootComponent(
 
     override fun onProfileTabClicked() {
         navigation.bringToFront(Config.Profile)
-    }
-
-    class Factory(
-        private val homeComponentFactory: HomeComponent.Factory,
-    ) : RootComponent.Factory {
-        override fun invoke(
-            componentContext: ComponentContext,
-        ): RootComponent {
-            return DefaultRootComponent(
-                componentContext = componentContext,
-                homeComponentFactory = homeComponentFactory,
-            )
-        }
     }
 }

@@ -4,16 +4,24 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.arkivanov.decompose.defaultComponentContext
-import org.doodoo.travel.ui.root.RootComponent
-import org.kodein.di.instance
+import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
+import org.doodoo.travel.core.di.initKoin
+import org.doodoo.travel.ui.root.DefaultRootComponent
+import org.koin.android.ext.koin.androidContext
 
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val rootComponentFactory: RootComponent.Factory by kodein.instance()
-        val rootComponent = rootComponentFactory(defaultComponentContext())
+        initKoin(enableNetworkLogs = true) {
+            androidContext(applicationContext)
+        }
+
+        val rootComponent = DefaultRootComponent(
+            componentContext = defaultComponentContext(),
+            storeFactory = DefaultStoreFactory(),
+        )
 
         setContent {
             App(rootComponent = rootComponent)

@@ -4,17 +4,22 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.operator.map
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
+import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import org.doodoo.travel.ui.home.store.HomeStore
+import org.doodoo.travel.ui.home.store.HomeStoreFactory
 import org.doodoo.travel.ulti.asValue
 
 internal class DefaultHomeComponent(
     componentContext: ComponentContext,
-    private val homeStoreFactory: HomeStoreFactory,
+    private val storeFactory: StoreFactory,
 ) : HomeComponent, ComponentContext by componentContext {
 
-    private val store = instanceKeeper.getStore { homeStoreFactory.create()}
+    private val store = instanceKeeper.getStore {
+        HomeStoreFactory(storeFactory).create()
+    }
 
     override val state: Value<HomeState> = store.asValue().map { it.toHomeState() }
 
@@ -47,19 +52,19 @@ internal class DefaultHomeComponent(
             is HomeStore.Label.ErrorOccurred -> HomeLabel.ErrorOccurred(error)
         }
 
-    class Factory(
-        private val homeStoreFactory: HomeStoreFactory
-    ) : HomeComponent.Factory {
-        override fun invoke(
-            componentContext: ComponentContext,
-            refresh: () -> Unit,
-            updateHomeData: (String) -> Unit
-        ): HomeComponent {
-            return DefaultHomeComponent(
-                componentContext = componentContext,
-                homeStoreFactory = homeStoreFactory
-            )
-        }
-    }
+//    class Factory(
+//        private val homeStoreFactory: HomeStoreFactory
+//    ) : HomeComponent.Factory {
+//        override fun invoke(
+//            componentContext: ComponentContext,
+//            refresh: () -> Unit,
+//            updateHomeData: (String) -> Unit
+//        ): HomeComponent {
+//            return DefaultHomeComponent(
+//                componentContext = componentContext,
+//                homeStoreFactory = homeStoreFactory
+//            )
+//        }
+//    }
 }
 

@@ -30,10 +30,4 @@ interface RootComponent {
         @Serializable
         data object Profile : Config()
     }
-
-    fun interface Factory {
-        operator fun invoke(
-            componentContext: ComponentContext,
-        ): RootComponent
-    }
 }

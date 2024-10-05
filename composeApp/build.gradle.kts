@@ -8,7 +8,7 @@ plugins {
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
-
+    alias(libs.plugins.sqldelight)
 }
 
 kotlin {
@@ -19,23 +19,26 @@ kotlin {
         }
     }
     
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "ComposeApp"
-            isStatic = true
-        }
-    }
+//    listOf(
+//        iosX64(),
+//        iosArm64(),
+//        iosSimulatorArm64()
+//    ).forEach { iosTarget ->
+//        iosTarget.binaries.framework {
+//            baseName = "ComposeApp"
+//            isStatic = true
+//        }
+//    }
     
     sourceSets {
         
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.sqldelight.android)
+            implementation(libs.koin.android)
         }
+
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -51,7 +54,8 @@ kotlin {
             implementation(libs.decompose)
             implementation(libs.decompose.extensions.compose)
 
-            implementation(libs.kodein.di)
+            implementation(libs.koin.core)
+            implementation(libs.koin.test)
             implementation(libs.essenty.lifecycle.coroutines)
             implementation(libs.mvikotlin)
             implementation(libs.mvikotlin.main)
@@ -63,6 +67,9 @@ kotlin {
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktor.client.cio)
+
+            implementation(libs.sqldelight.coroutines)
+            implementation(libs.sqldelight.adapter)
         }
     }
 }
@@ -101,6 +108,14 @@ android {
     }
     dependencies {
         debugImplementation(compose.uiTooling)
+    }
+}
+
+sqldelight {
+    databases {
+        create(name = "TravelPlanningDatbase") {
+            packageName.set("org.doodoo.travel.core.database")
+        }
     }
 }
 

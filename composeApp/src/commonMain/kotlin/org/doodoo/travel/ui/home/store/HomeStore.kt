@@ -1,4 +1,4 @@
-package org.doodoo.travel.ui.home
+package org.doodoo.travel.ui.home.store
 
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
@@ -8,6 +8,8 @@ import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import kotlinx.coroutines.launch
 import org.doodoo.travel.core.model.TravelGuide
 import org.doodoo.travel.data.repository.TravelGuideRepository
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 internal interface HomeStore : Store<HomeStore.Intent, HomeStore.State, HomeStore.Label> {
     sealed interface State {
@@ -15,14 +17,11 @@ internal interface HomeStore : Store<HomeStore.Intent, HomeStore.State, HomeStor
         val error: String?
 
         data class Content(
-            val travelGuild: TravelGuide,
-            override val isLoading: Boolean = false,
-            override val error: String? = null
+            val travelGuild: TravelGuide, override val isLoading: Boolean = false, override val error: String? = null
         ) : State
 
         data class Error(
-            override val error: String,
-            override val isLoading: Boolean = false
+            override val error: String, override val isLoading: Boolean = false
         ) : State
     }
 
@@ -38,8 +37,10 @@ internal interface HomeStore : Store<HomeStore.Intent, HomeStore.State, HomeStor
 
 internal class HomeStoreFactory(
     private val storeFactory: StoreFactory,
-    private val travelGuideRepository: TravelGuideRepository,
-) {
+) : KoinComponent {
+
+    private val travelGuideRepository by inject<TravelGuideRepository>()
+
     fun create(): HomeStore =
         object : HomeStore, Store<HomeStore.Intent, HomeStore.State, HomeStore.Label> by storeFactory.create(
             name = "HomeStore",
@@ -117,19 +118,18 @@ internal class HomeStoreFactory(
     }
 
     private object ReducerImpl : Reducer<HomeStore.State, Msg> {
-        override fun HomeStore.State.reduce(msg: Msg): HomeStore.State =
-            when (this) {
-                is HomeStore.State.Content -> when (msg) {
-                    is Msg.Loading -> copy(isLoading = true, error = null)
-                    is Msg.HomeDataUpdated -> copy(travelGuild = msg.travelGuild, isLoading = false, error = null)
-                    is Msg.ErrorOccurred -> HomeStore.State.Error(msg.error, isLoading = false)
-                }
-
-                is HomeStore.State.Error -> when (msg) {
-                    is Msg.Loading -> HomeStore.State.Content(TravelGuide.default(), isLoading = true)
-                    is Msg.HomeDataUpdated -> HomeStore.State.Content(msg.travelGuild, isLoading = false)
-                    is Msg.ErrorOccurred -> copy(error = msg.error, isLoading = false)
-                }
+        override fun HomeStore.State.reduce(msg: Msg): HomeStore.State = when (this) {
+            is HomeStore.State.Content -> when (msg) {
+                is Msg.Loading -> copy(isLoading = true, error = null)
+                is Msg.HomeDataUpdated -> copy(travelGuild = msg.travelGuild, isLoading = false, error = null)
+                is Msg.ErrorOccurred -> HomeStore.State.Error(msg.error, isLoading = false)
             }
+
+            is HomeStore.State.Error -> when (msg) {
+                is Msg.Loading -> HomeStore.State.Content(TravelGuide.default(), isLoading = true)
+                is Msg.HomeDataUpdated -> HomeStore.State.Content(msg.travelGuild, isLoading = false)
+                is Msg.ErrorOccurred -> copy(error = msg.error, isLoading = false)
+            }
+        }
     }
 }

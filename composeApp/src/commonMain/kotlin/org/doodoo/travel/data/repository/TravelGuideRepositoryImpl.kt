@@ -1,11 +1,11 @@
 package org.doodoo.travel.data.repository
 
 import io.ktor.client.*
-import kotlinx.coroutines.delay
 import org.doodoo.travel.core.model.TravelGuide
 import org.doodoo.travel.ulti.parseTravelGuide
+import org.koin.core.component.KoinComponent
 
-class TravelGuideRepositoryImpl(private val httpClient: HttpClient) : TravelGuideRepository {
+class TravelGuideRepositoryImpl : TravelGuideRepository, KoinComponent {
     override suspend fun getData(input: String): TravelGuide {
 
         val jsonString = """

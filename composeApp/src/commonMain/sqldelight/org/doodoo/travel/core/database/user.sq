@@ -1,0 +1,10 @@
+   CREATE TABLE user (
+       id INTEGER NOT NULL PRIMARY KEY,
+       name TEXT NOT NULL
+   );
+
+   selectAllUsers:
+   SELECT * FROM user;
+
+   insertUser:
+   INSERT INTO user (id, name) VALUES (?, ?);
