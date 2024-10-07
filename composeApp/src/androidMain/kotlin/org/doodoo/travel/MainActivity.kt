@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import com.arkivanov.decompose.defaultComponentContext
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import org.doodoo.travel.core.di.initKoin
+import org.doodoo.travel.ui.main.DefaultMainComponent
 import org.doodoo.travel.ui.root.DefaultRootComponent
 import org.koin.android.ext.koin.androidContext
 

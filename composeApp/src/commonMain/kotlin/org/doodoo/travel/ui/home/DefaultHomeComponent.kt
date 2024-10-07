@@ -51,20 +51,5 @@ internal class DefaultHomeComponent(
         when (this) {
             is HomeStore.Label.ErrorOccurred -> HomeLabel.ErrorOccurred(error)
         }
-
-//    class Factory(
-//        private val homeStoreFactory: HomeStoreFactory
-//    ) : HomeComponent.Factory {
-//        override fun invoke(
-//            componentContext: ComponentContext,
-//            refresh: () -> Unit,
-//            updateHomeData: (String) -> Unit
-//        ): HomeComponent {
-//            return DefaultHomeComponent(
-//                componentContext = componentContext,
-//                homeStoreFactory = homeStoreFactory
-//            )
-//        }
-//    }
 }
 

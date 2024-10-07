@@ -4,5 +4,5 @@ import org.doodoo.travel.core.database.User
 
 
 interface UserDetailRepository {
-    suspend fun createUser(user : User)
+    suspend fun createUser(user : User) : User
 }

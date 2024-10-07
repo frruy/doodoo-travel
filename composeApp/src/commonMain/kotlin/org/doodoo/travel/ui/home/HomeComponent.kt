@@ -11,13 +11,6 @@ interface HomeComponent {
     fun refresh()
     fun updateHomeData(newData: String)
 
-    fun interface Factory {
-        operator fun invoke(
-            componentContext: ComponentContext,
-            refresh: () -> Unit,
-            updateHomeData: (String) -> Unit,
-        ): HomeComponent
-    }
 }
 
 sealed interface HomeState {
