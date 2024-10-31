@@ -15,7 +15,7 @@ fun RootContent(component: RootComponent) {
         animation = stackAnimation(slide())
     ) { child ->
         when (val instance = child.instance) {
-            is RootComponent.Child.Splash -> SplashScreen(component::onSplashFinished)
+            is RootComponent.Child.Splash -> SplashScreen()
             is RootComponent.Child.Onboarding -> OnboardingScreen(instance.component)
             is RootComponent.Child.Main -> MainScreen(instance.component)
         }

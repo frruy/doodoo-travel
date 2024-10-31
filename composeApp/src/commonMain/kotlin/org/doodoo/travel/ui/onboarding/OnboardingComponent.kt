@@ -6,8 +6,8 @@ import org.doodoo.travel.core.database.User
 
 interface OnboardingComponent {
     val state: Value<OnboardingState>
-    val labels: Flow<OnboardingLabel>
     fun createUser(user: User)
+    fun onUserCreated()
 }
 
 sealed interface OnboardingState {
@@ -24,8 +24,4 @@ sealed interface OnboardingState {
         override val error: String,
         override val isLoading: Boolean
     ) : OnboardingState
-}
-
-sealed interface OnboardingLabel {
-    data class ErrorOccurred(val error: String) : OnboardingLabel
 }

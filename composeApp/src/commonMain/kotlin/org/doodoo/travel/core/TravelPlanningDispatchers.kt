@@ -1,4 +1,4 @@
-package com.mocoding.pokedex
+package org.doodoo.travel.core
 
 import kotlinx.coroutines.CoroutineDispatcher
 

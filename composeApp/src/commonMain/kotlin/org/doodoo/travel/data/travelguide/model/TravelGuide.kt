@@ -1,4 +1,4 @@
-package org.doodoo.travel.core.model
+package org.doodoo.travel.data.travelguide.model
 
 import kotlinx.serialization.Serializable
 

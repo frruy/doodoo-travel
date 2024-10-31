@@ -35,17 +35,6 @@ fun OnboardingScreen(component: OnboardingComponent) {
             }
         }
     }
-
-    // Collect labels (side effects)
-    LaunchedEffect(component) {
-        component.labels.collect { label ->
-            when (label) {
-                is OnboardingLabel.ErrorOccurred -> {
-                    // Show error message, e.g., using a Snackbar
-                }
-            }
-        }
-    }
 }
 
 @Composable
@@ -56,13 +45,13 @@ fun OnboardingHeader() {
             text = "Welcome to YourApp",
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colors.primary
+            color = colors.primary
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = "Let's get to know you!",
             fontSize = 16.sp,
-            color = MaterialTheme.colors.onBackground
+            color = colors.onBackground
         )
     }
 }
@@ -70,6 +59,7 @@ fun OnboardingHeader() {
 @Composable
 fun UserInfoSection(state: OnboardingState.Content, onCreateUser: (User) -> Unit) {
     var name by remember { mutableStateOf(state.user.name) }
+    var interest by remember { mutableStateOf(state.user.interest) }
 
     Column(
         modifier = Modifier
@@ -91,25 +81,43 @@ fun UserInfoSection(state: OnboardingState.Content, onCreateUser: (User) -> Unit
             singleLine = true,
             isError = state.error != null
         )
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            text = "What's your interest?",
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Medium
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
+        OutlinedTextField(
+            value = interest,
+            onValueChange = { interest = it },
+            label = { Text("Enter your interest") },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
+            isError = state.error != null
+        )
+
         if (state.error != null) {
             Text(
                 text = state.error,
-                color = MaterialTheme.colors.error,
+                color = colors.error,
                 style = MaterialTheme.typography.caption,
                 modifier = Modifier.padding(start = 16.dp, top = 4.dp)
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
         Button(
-            onClick = { onCreateUser(state.user.copy(name = name)) },
+            onClick = { onCreateUser(state.user.copy(id  = 1,name = name, interest = interest)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
             enabled = true,
 //            enabled = !state.isLoading && name.isNotBlank(),
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = MaterialTheme.colors.primary,
-                disabledBackgroundColor = MaterialTheme.colors.primary.copy(alpha = 0.3f)
+                backgroundColor = colors.primary,
+                disabledBackgroundColor = colors.primary.copy(alpha = 0.3f)
             )
         ) {
             Text(
@@ -143,13 +151,13 @@ fun ErrorSection(state: OnboardingState.Error) {
             text = "An error occurred",
             fontSize = 18.sp,
             fontWeight = FontWeight.Medium,
-            color = MaterialTheme.colors.error
+            color = colors.error
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = state.error,
             fontSize = 16.sp,
-            color = MaterialTheme.colors.error
+            color = colors.error
         )
     }
 }

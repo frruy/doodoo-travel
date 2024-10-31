@@ -1,7 +1,7 @@
-package org.doodoo.travel.data.repository
+package org.doodoo.travel.data.travelguide.repository
 
 import io.ktor.client.*
-import org.doodoo.travel.core.model.TravelGuide
+import org.doodoo.travel.data.travelguide.model.TravelGuide
 import org.doodoo.travel.ulti.parseTravelGuide
 import org.koin.core.component.KoinComponent
 

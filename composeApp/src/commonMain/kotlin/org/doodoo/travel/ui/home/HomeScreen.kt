@@ -5,7 +5,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import org.doodoo.travel.core.model.TravelGuide
+import org.doodoo.travel.data.travelguide.model.TravelGuide
 import org.doodoo.travel.ui.home.HomeComponent
 import org.doodoo.travel.ui.home.HomeLabel
 import org.doodoo.travel.ui.home.HomeState

@@ -5,15 +5,13 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.operator.map
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.arkivanov.mvikotlin.extensions.coroutines.labels
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import org.doodoo.travel.core.database.User
 import org.doodoo.travel.ulti.asValue
 
 class DefaultOnboardingComponent(
     componentContext: ComponentContext,
-    private val storeFactory: StoreFactory
+    private val storeFactory: StoreFactory,
+    private val onUserCreated: () -> Unit
 ) : OnboardingComponent, ComponentContext by componentContext {
 
     private val store = instanceKeeper.getStore {
@@ -22,13 +20,28 @@ class DefaultOnboardingComponent(
 
     override val state: Value<OnboardingState> = store.asValue().map { it.toOnBoardingState() }
 
-    override val labels: Flow<OnboardingLabel> = store.labels.map { it.toOnBoardingLabel() }
-
     override fun createUser(user: User) {
         store.accept(OnBoardingStore.Intent.CreateUser(user))
     }
+    override fun onUserCreated() {
+        onUserCreated.invoke()
+    }
 
-    private fun OnBoardingStore.State.toOnBoardingState(): OnboardingState =
+    init {
+        // Observe state changes to detect successful user creation
+        state.subscribe { currentState ->
+            when (currentState) {
+                is OnboardingState.Content -> {
+                    if (!currentState.isLoading && currentState.user.id.toInt() != 0) {
+                        onUserCreated() // Trigger navigation callback
+                    }
+                }
+                else -> {} // Handle other states if needed
+            }
+        }
+    }
+
+    private fun OnBoardingStore.State. toOnBoardingState(): OnboardingState =
         when (this) {
             is OnBoardingStore.State.Content -> OnboardingState.Content(
                 user = user,
@@ -40,11 +53,6 @@ class DefaultOnboardingComponent(
                 error = error,
                 isLoading = isLoading,
             )
-        }
-
-    private fun OnBoardingStore.Label.toOnBoardingLabel(): OnboardingLabel =
-        when (this) {
-            is OnBoardingStore.Label.ErrorOccurred -> OnboardingLabel.ErrorOccurred(error)
         }
 
 }

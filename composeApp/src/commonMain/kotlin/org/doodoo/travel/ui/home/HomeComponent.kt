@@ -3,7 +3,7 @@ package org.doodoo.travel.ui.home
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.Value
 import kotlinx.coroutines.flow.Flow
-import org.doodoo.travel.core.model.TravelGuide
+import org.doodoo.travel.data.travelguide.model.TravelGuide
 
 interface HomeComponent {
     val state: Value<HomeState>

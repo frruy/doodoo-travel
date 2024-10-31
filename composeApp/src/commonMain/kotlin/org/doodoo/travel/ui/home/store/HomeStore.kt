@@ -6,8 +6,8 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import kotlinx.coroutines.launch
-import org.doodoo.travel.core.model.TravelGuide
-import org.doodoo.travel.data.repository.TravelGuideRepository
+import org.doodoo.travel.data.travelguide.model.TravelGuide
+import org.doodoo.travel.data.travelguide.repository.TravelGuideRepository
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
