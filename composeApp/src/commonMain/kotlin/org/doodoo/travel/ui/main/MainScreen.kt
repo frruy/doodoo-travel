@@ -13,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import org.doodoo.travel.ui.search.SearchScreen
 
 @Composable
 fun MainScreen(component: MainComponent) {
@@ -45,7 +46,7 @@ fun MainScreen(component: MainComponent) {
             Children(stack = childStack) { child ->
                 when (val instance = child.instance) {
                     is MainComponent.Child.Home -> HomeScreen(instance.component)
-                    is MainComponent.Child.Search -> HomeScreen(instance.component)
+                    is MainComponent.Child.Search -> SearchScreen(instance.component)
                     is MainComponent.Child.Profile -> HomeScreen(instance.component)
                 }
             }

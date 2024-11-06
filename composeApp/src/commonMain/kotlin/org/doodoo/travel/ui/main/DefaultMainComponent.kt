@@ -9,6 +9,7 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import org.doodoo.travel.ui.home.DefaultHomeComponent
 import org.doodoo.travel.ui.main.MainComponent.Config
+import org.doodoo.travel.ui.search.SearchComponent
 
 internal class DefaultMainComponent(
     componentContext: ComponentContext,
@@ -43,7 +44,7 @@ internal class DefaultMainComponent(
             )
 
             is Config.Search -> MainComponent.Child.Search(
-                DefaultHomeComponent(
+                SearchComponent(
                     componentContext = componentContext,
                     storeFactory = storeFactory
                 )

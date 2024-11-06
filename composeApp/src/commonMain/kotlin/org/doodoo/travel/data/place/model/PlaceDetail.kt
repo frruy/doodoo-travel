@@ -1,77 +1,92 @@
 package org.doodoo.travel.data.place.model
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class PlaceDetail(
-  @SerialName("place_id")
-  val placeId: String,
-  val name: String,
-  @SerialName("formatted_address")
-  val formattedAddress: String,
-  val rating: Double? = null,
-  @SerialName("user_ratings_total")
-  val userRatingsTotal: Int? = null,
-  val photos: List<PlacePhoto>? = null,
-  @SerialName("opening_hours")
-  val openingHours: OpeningHours? = null,
-  @SerialName("formatted_phone_number")
-  val formattedPhoneNumber: String? = null,
-  val website: String? = null,
-  val reviews: List<Review>? = null,
-  val geometry: Geometry? = null
+data class PlaceDetailResponse(
+    val html_attributions: List<String> = emptyList(), val result: PlaceDetail, val status: String
 )
 
 @Serializable
-data class PlacePhoto(
-  @SerialName("photo_reference")
-  val photoReference: String,
-  val height: Int,
-  val width: Int,
-  @SerialName("html_attributions")
-  val htmlAttributions: List<String>
+data class PlaceDetail(
+    val address_components: List<AddressComponent>,
+    val adr_address: String,
+    val business_status: String,
+    val current_opening_hours: OpeningHours? = null,
+    val formatted_address: String,
+    val formatted_phone_number: String? = null,
+    val geometry: Geometry,
+    val icon: String,
+    val icon_background_color: String,
+    val icon_mask_base_uri: String,
+    val international_phone_number: String? = null,
+    val name: String,
+    val opening_hours: OpeningHours? = null,
+    val photos: List<Photo>? = null,
+    val place_id: String,
+    val plus_code: PlusCode? = null,
+    val rating: Double? = null,
+    val reference: String,
+    val reviews: List<Review>? = null,
+    val types: List<String>,
+    val url: String,
+    val user_ratings_total: Int? = null,
+    val utc_offset: Int? = null,
+    val vicinity: String,
+    val website: String? = null,
+    val wheelchair_accessible_entrance: Boolean? = null
+)
+
+@Serializable
+data class AddressComponent(
+    val long_name: String, val short_name: String, val types: List<String>
 )
 
 @Serializable
 data class OpeningHours(
-  @SerialName("open_now")
-  val openNow: Boolean? = null,
-  val periods: List<Period>? = null,
-  @SerialName("weekday_text")
-  val weekdayText: List<String>? = null
+    val open_now: Boolean, val periods: List<Period>, val weekday_text: List<String>
 )
 
 @Serializable
 data class Period(
-  val open: TimeOfDay,
-  val close: TimeOfDay? = null
+    val close: TimePeriod, val open: TimePeriod
 )
 
 @Serializable
-data class TimeOfDay(
-  val day: Int,
-  val time: String
-)
-
-@Serializable
-data class Review(
-  @SerialName("author_name")
-  val authorName: String,
-  val rating: Int,
-  @SerialName("relative_time_description")
-  val relativeTimeDescription: String,
-  val text: String,
-  val time: Long
+data class TimePeriod(
+    val date: String? = null, val day: Int, val time: String
 )
 
 @Serializable
 data class Geometry(
-  val location: Location
+    val location: Location, val viewport: Viewport
 )
 
 @Serializable
 data class Location(
-  val lat: Double,
-  val lng: Double
+    val lat: Double, val lng: Double
+)
+
+@Serializable
+data class Viewport(
+    val northeast: Location, val southwest: Location
+)
+
+@Serializable
+data class Photo(
+    val height: Int,
+    val html_attributions: List<String>,
+    val photo_reference: String,
+    val width: Int
+)
+
+@Serializable
+data class PlusCode(
+    val compound_code: String, val global_code: String
+)
+
+@Serializable
+data class Review(
+    val author_name: String,
+    val author_url: String,
 )

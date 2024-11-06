@@ -1,10 +1,18 @@
+// SearchComponent.kt
 package org.doodoo.travel.ui.search
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import org.doodoo.travel.data.place.model.PlaceDetail
+import org.doodoo.travel.data.place.repository.PlacesRepository
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 class SearchComponent(
     componentContext: ComponentContext,
@@ -15,74 +23,80 @@ class SearchComponent(
         storeFactory = storeFactory
     ).create()
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     val state: StateFlow<SearchStore.State> = store.stateFlow
 
-    fun onSearchQueryChanged(query: String) {
-        store.accept(SearchStore.Intent.UpdateSearchQuery(query))
-    }
-
-    fun onSearchSubmit() {
-        store.accept(SearchStore.Intent.SubmitSearch)
+    fun searchPlace(placeId: String) {
+        store.accept(SearchStore.Intent.SearchPlace(placeId))
     }
 }
 
 interface SearchStore : Store<SearchStore.Intent, SearchStore.State, Nothing> {
-    sealed class Intent {
-        data class UpdateSearchQuery(val query: String) : Intent()
-        object SubmitSearch : Intent()
-    }
-
     data class State(
-        val searchQuery: String = "",
-        val searchResults: List<String> = emptyList(),
-        val isLoading: Boolean = false
+        val placeDetail: PlaceDetail? = null,
+        val isLoading: Boolean = false,
+        val error: String? = null
     )
 
+    sealed class Intent {
+        data class SearchPlace(val placeId: String) : Intent()
+    }
+
     sealed class Result {
-        data class SearchQueryUpdated(val query: String) : Result()
-        object SearchStarted : Result()
-        data class SearchCompleted(val results: List<String>) : Result()
+        data class PlaceLoaded(val place: PlaceDetail) : Result()
+        data class Error(val message: String) : Result()
+        object Loading : Result()
     }
 }
 
-class SearchStoreFactory(private val storeFactory: StoreFactory) {
+class SearchStoreFactory(private val storeFactory: StoreFactory) : KoinComponent {
+    private val placesRepository: PlacesRepository by inject()
+
     fun create(): SearchStore =
         object : SearchStore, Store<SearchStore.Intent, SearchStore.State, Nothing> by storeFactory.create(
             name = "SearchStore",
             initialState = SearchStore.State(),
             bootstrapper = null,
-            executorFactory = ::SearchExecutor,
+            executorFactory = { SearchExecutor(placesRepository) },
             reducer = SearchReducer
         ) {}
 }
 
-class SearchExecutor : com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor<
-        SearchStore.Intent,
-        Nothing,
-        SearchStore.State,
-        SearchStore.Result,
-        Nothing
-        >() {
+class SearchExecutor(
+    private val placesRepository: PlacesRepository
+) : CoroutineExecutor<SearchStore.Intent, Nothing, SearchStore.State, SearchStore.Result, Nothing>() {
     override fun executeIntent(intent: SearchStore.Intent) {
         when (intent) {
-            is SearchStore.Intent.UpdateSearchQuery -> {
-                dispatch(SearchStore.Result.SearchQueryUpdated(intent.query))
-            }
-            is SearchStore.Intent.SubmitSearch -> {
-                dispatch(SearchStore.Result.SearchStarted)
-                // Simulate search delay
-//                delay(1000)
-                dispatch(SearchStore.Result.SearchCompleted(listOf("Result 1", "Result 2", "Result 3")))
+            is SearchStore.Intent.SearchPlace -> {
+                scope.launch {
+                    dispatch(SearchStore.Result.Loading)
+                    try {
+                        val place = placesRepository.getPlaceDetails(intent.placeId)
+                        dispatch(SearchStore.Result.PlaceLoaded(place.result))
+                    } catch (e: Exception) {
+                        dispatch(SearchStore.Result.Error(e.message ?: "Failed to load place details"))
+                    }
+                }
             }
         }
     }
 }
 
 object SearchReducer : com.arkivanov.mvikotlin.core.store.Reducer<SearchStore.State, SearchStore.Result> {
-    override fun SearchStore.State.reduce(result: SearchStore.Result): SearchStore.State =
-        when (result) {
-            is SearchStore.Result.SearchQueryUpdated -> copy(searchQuery = result.query)
-            is SearchStore.Result.SearchStarted -> copy(isLoading = true)
-            is SearchStore.Result.SearchCompleted -> copy(isLoading = false, searchResults = result.results)
+    override fun SearchStore.State.reduce(msg: SearchStore.Result): SearchStore.State =
+        when (msg) {
+            is SearchStore.Result.Loading -> copy(
+                isLoading = true,
+                error = null
+            )
+            is SearchStore.Result.PlaceLoaded -> copy(
+                placeDetail = msg.place,
+                isLoading = false,
+                error = null
+            )
+            is SearchStore.Result.Error -> copy(
+                isLoading = false,
+                error = msg.message
+            )
         }
 }

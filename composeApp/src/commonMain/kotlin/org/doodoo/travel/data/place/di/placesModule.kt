@@ -11,7 +11,7 @@ val placesModule = module {
     single { 
         PlacesService(
             httpClient = get(),
-            apiKey = "AIzaSyBj-lhgxch1Om1NFhQ9uCjPav_bUAVkyi8"
+            apiKey = "AIzaSyDS31F8O68_ffKBrEm1ZtTPz8pO8uKWMBA"
         )
     }
     single<PlacesRepository> { PlacesRepositoryImpl(placesService = get()) }
