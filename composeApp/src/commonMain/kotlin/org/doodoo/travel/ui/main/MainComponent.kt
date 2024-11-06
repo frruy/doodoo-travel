@@ -4,6 +4,7 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import kotlinx.serialization.Serializable
 import org.doodoo.travel.ui.home.HomeComponent
+import org.doodoo.travel.ui.search.SearchComponent
 
 interface MainComponent {
     val childStack: Value<ChildStack<Config, Child>>
@@ -14,7 +15,7 @@ interface MainComponent {
 
     sealed class Child {
         data class Home(val component: HomeComponent) : Child()
-        data class Search(val component: HomeComponent) : Child()
+        data class Search(val component: SearchComponent) : Child()
         data class Profile(val component: HomeComponent) : Child()
     }
 
