@@ -22,7 +22,8 @@ koin = "3.5.6"
 essenty = "2.1.0"
 mvi = "4.1.0"
 sqldelight = "2.0.2"
-serialization = "1.6.0"
+serialization = "1.6.3"
+coil = "2.0.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -65,6 +66,7 @@ sqldelight-ios = { module = "app.cash.sqldelight:native-driver", version.ref = "
 sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }
 sqldelight-adapter = { module = "app.cash.sqldelight:primitive-adapters", version.ref = "sqldelight" }
 serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
+coil = { module = "io.coil-kt:coil-compose", version.ref = "coil"}
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

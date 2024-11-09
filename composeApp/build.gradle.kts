@@ -71,6 +71,8 @@ kotlin {
             implementation(libs.sqldelight.coroutines)
             implementation(libs.sqldelight.adapter)
             implementation(libs.serialization.json)
+
+            implementation(libs.coil)
         }
     }
 }

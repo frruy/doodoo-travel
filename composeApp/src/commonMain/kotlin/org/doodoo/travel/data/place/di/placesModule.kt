@@ -2,6 +2,7 @@
 
 package org.doodoo.travel.data.place.di
 
+import org.doodoo.travel.core.Config.GOOGLE_PLACES_API_KEY
 import org.doodoo.travel.data.place.repository.PlacesRepository
 import org.doodoo.travel.data.place.repository.PlacesRepositoryImpl
 import org.doodoo.travel.data.place.service.PlacesService
@@ -11,7 +12,7 @@ val placesModule = module {
     single { 
         PlacesService(
             httpClient = get(),
-            apiKey = "AIzaSyDS31F8O68_ffKBrEm1ZtTPz8pO8uKWMBA"
+            apiKey = GOOGLE_PLACES_API_KEY
         )
     }
     single<PlacesRepository> { PlacesRepositoryImpl(placesService = get()) }

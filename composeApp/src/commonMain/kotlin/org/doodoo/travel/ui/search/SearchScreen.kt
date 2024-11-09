@@ -1,9 +1,12 @@
 package org.doodoo.travel.ui.search
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
@@ -18,7 +21,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
+import org.doodoo.travel.core.Config.GOOGLE_PLACES_API_KEY
 import org.doodoo.travel.data.place.model.PlaceDetail
 
 @Composable
@@ -84,6 +91,20 @@ private fun PlaceDetailCard(place: PlaceDetail) {
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
+            // Display the cover image if available
+            place.photos?.firstOrNull()?.let { photo ->
+                val imageUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photo.photo_reference}&key=$GOOGLE_PLACES_API_KEY"
+                Image(
+                    painter = rememberAsyncImagePainter(imageUrl),
+                    contentDescription = place.name,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp) // Adjust height as needed
+                        .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
+
             Text(
                 text = place.name,
                 style = MaterialTheme.typography.h6,
